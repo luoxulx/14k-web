@@ -7,7 +7,7 @@
         <router-link :to="{path: '/blog/article/create'}"><el-button type="primary" size="mini">创建</el-button></router-link>
       </el-header>
       <el-main>
-        <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange">
+        <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange" @sort-change='sortByCustom'>
           <el-table-column type="selection" width="50" />
           <el-table-column prop="id" label="ID" width="50" sortable />
           <el-table-column prop="category_name" label="Category" width="80" show-overflow-tooltip />
@@ -67,7 +67,9 @@ export default {
       listPageSelect: [10, 20, 50, 100, 200],
       listPerPage: 10,
       articleContentVisible: false,
-      articleContentValue: ''
+      articleContentValue: '',
+      sortWay: 'DESC',
+      sortField: 'id'
     }
   },
   created() {
@@ -79,8 +81,22 @@ export default {
       this.loadingIcon = true
       this.articlePageList()
     },
-    articlePageList() {
-      const params = { per_page: this.listPerPage, page: this.listCurrent }
+    sortByCustom(column) {
+      // 后端排序
+      console.log(column)
+      this.sortField = column.prop
+      if (column.order === 'ascending') {
+        this.sortWay = 'ASC'
+      } else if (column.order === 'descending') {
+        this.sortWay = 'DESC'
+      } else {
+        return false
+      }
+      // TODO 待完成
+      this.articlePageList()
+    },
+    articlePageList(extras = {}) {
+      const params = { per_page: this.listPerPage, page: this.listCurrent, category_id: null }
       articleList(params).then(response => {
         if (response.status === true) {
           this.articleList = response.data
