@@ -104,13 +104,21 @@ export default {
         this.$message.warning('Please select at least one row. ')
         return false
       }
-      batchDeleteArticle({ ids: this.multipleSelected }).then(response => {
-        if (response.status === true) {
-          this.$message.success('successful')
-          this.refreshList()
-        }
+      this.$confirm('确定要删除 ' + this.multipleSelected.length + ' 篇文章吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        batchDeleteArticle({ ids: this.multipleSelected }).then(response => {
+          if (response.status === true) {
+            this.$message.success('Delete Successful')
+            this.refreshList()
+          }
+        }).catch(() => {
+          return true
+        })
       }).catch(() => {
-        return true
+        this.$message.info('已取消')
       })
     },
     deleteArticle(row) {
