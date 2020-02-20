@@ -1,8 +1,9 @@
 <template>
   <div class="app-container">
     <el-container>
-      <el-aside width="8%">
-        <el-tree :data="categoryList"></el-tree>
+      <el-aside width="10%">
+        <el-input v-model="filterCategoryName" placeholder="分类名" size="mini" clearable />
+        <el-tree ref="categoryTree" :data="categoryList" :filter-node-method="filterCategoryNode" empty-text="None" default-expand-all highlight-current @node-click="getNowCategoryArticles" />
       </el-aside>
       <el-container>
         <el-header height="30">
@@ -11,7 +12,7 @@
           <router-link :to="{path: '/blog/article/create'}"><el-button type="primary" size="mini">创建</el-button></router-link>
         </el-header>
         <el-main>
-          <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange" @sort-change='sortByCustom'>
+          <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange" @sort-change="sortByCustom">
             <el-table-column type="selection" width="50" />
             <el-table-column prop="id" label="ID" width="50" sortable />
             <el-table-column prop="category_name" label="Category" width="80" show-overflow-tooltip />
@@ -34,8 +35,8 @@
             </el-table-column>
             <el-table-column prop="updated_at" label="Update At" width="142" sortable>
               <template slot-scope="scope">
-                <small><i class="el-icon-time"></i>{{scope.row.updated_at}}</small>
-                <small><i class="el-icon-timer"></i>{{scope.row.created_at}}</small>
+                <small><i class="el-icon-time" />{{ scope.row.updated_at }}</small>
+                <small><i class="el-icon-timer" />{{ scope.row.created_at }}</small>
               </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作" width="186">
@@ -80,7 +81,15 @@ export default {
       articleContentValue: '',
       sortWay: 'DESC',
       sortField: 'id',
-      categoryList: []
+      categoryList: [{ id: 0, label: '所有分类', children: [] }],
+      filterCategoryName: '',
+      // 默认显示所有分类下的文章
+      nowCategoryId: 0
+    }
+  },
+  watch: {
+    filterCategoryName(val) {
+      this.$refs.categoryTree.filter(val)
     }
   },
   created() {
@@ -116,16 +125,27 @@ export default {
         for (const i in response.data) {
           categories.push({ label: response.data[i].name, id: response.data[i].id })
         }
-        this.categoryList = categories
+        this.categoryList[0].children = categories
       }).catch(error => {
         console.error(error)
       })
+    },
+    filterCategoryNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
+    },
+    getNowCategoryArticles(nowCate, node, self) {
+      this.nowCategoryId = parseInt(nowCate.id)
+      this.articlePageList()
     },
     articlePageList(extras = {}) {
       const params = { per_page: this.listPerPage, page: this.listCurrent, category_id: null }
       if (extras.sortField && extras.sortWay) {
         params.sort_field = extras.sortField
         params.sort_way = extras.sortWay
+      }
+      if (this.nowCategoryId !== 0) {
+        params.category_id = this.nowCategoryId
       }
 
       articleList(params).then(response => {
