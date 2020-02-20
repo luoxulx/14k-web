@@ -16,8 +16,8 @@
             <el-table-column type="selection" width="50" />
             <el-table-column prop="id" label="ID" width="50" sortable />
             <el-table-column prop="category_name" label="Category" width="80" show-overflow-tooltip />
-            <el-table-column prop="user_name" label="User" width="80" show-overflow-tooltip />
-            <el-table-column prop="title" label="Title" width="200" show-overflow-tooltip>
+            <el-table-column prop="user_name" label="User" width="65" show-overflow-tooltip />
+            <el-table-column prop="title" label="Title" width="160" show-overflow-tooltip>
               <template slot-scope="scope">
                 <a :href="'https://www.lnmpa.top/' + scope.row.slug" target="_blank">{{ scope.row.title }}</a>
               </template>
@@ -27,15 +27,16 @@
                 <p>{{ scope.row.description }}</p>
               </template>
             </el-table-column>
-            <el-table-column label="草稿" width="51">
+            <el-table-column label="草稿" width="52">
               <template slot-scope="scope">
                 <el-button v-if="scope.row.is_draft == true" type="danger" size="mini" @click="draftArticle(scope.row, 0)">Y</el-button>
                 <el-button v-if="scope.row.is_draft == false" type="success" size="mini" @click="draftArticle(scope.row, 1)">N</el-button>
               </template>
             </el-table-column>
-            <el-table-column prop="updated_at" label="Update At" width="142" sortable>
+            <el-table-column prop="updated_at" label="Update At" width="150" sortable>
               <template slot-scope="scope">
                 <small><i class="el-icon-time" />{{ scope.row.updated_at }}</small>
+                <br>
                 <small><i class="el-icon-timer" />{{ scope.row.created_at }}</small>
               </template>
             </el-table-column>
