@@ -1,48 +1,58 @@
 <template>
   <div class="app-container">
     <el-container>
-      <el-header height="30">
-        <el-button type="default" size="mini" @click="refreshList">刷新</el-button>
-        <el-button type="danger" size="mini" @click="batchDelete">批量删除</el-button>
-        <router-link :to="{path: '/blog/article/create'}"><el-button type="primary" size="mini">创建</el-button></router-link>
-      </el-header>
-      <el-main>
-        <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange" @sort-change='sortByCustom'>
-          <el-table-column type="selection" width="50" />
-          <el-table-column prop="id" label="ID" width="50" sortable />
-          <el-table-column prop="category_name" label="Category" width="80" show-overflow-tooltip />
-          <el-table-column prop="user_name" label="User" width="80" show-overflow-tooltip />
-          <el-table-column prop="title" label="Title" width="200" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <a :href="'https://www.lnmpa.top/' + scope.row.slug" target="_blank">{{ scope.row.title }}</a>
-            </template>
-          </el-table-column>
-          <el-table-column label="Description" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <p>{{ scope.row.description }}</p>
-            </template>
-          </el-table-column>
-          <el-table-column label="草稿" width="51">
-            <template slot-scope="scope">
-              <el-button v-if="scope.row.is_draft == true" type="danger" size="mini" @click="draftArticle(scope.row, 0)">Y</el-button>
-              <el-button v-if="scope.row.is_draft == false" type="success" size="mini" @click="draftArticle(scope.row, 1)">N</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column prop="updated_at" label="Update At" width="138" sortable />
-          <el-table-column fixed="right" label="操作" width="186">
-            <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="showArticleContent(scope.row)">预览</el-button>
-              <el-button type="warning" size="mini">
-                <router-link :to="{path: '/blog/article/edit/'+scope.row.id}">编辑</router-link>
-              </el-button>
-              <el-button type="danger" size="mini" @click="deleteArticle(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
-      <el-footer height="0">
-        <el-pagination :total="listTotal" :current-page.sync="listCurrent" :page-sizes="listPageSelect" :page-size.sync="listPerPage" layout="total, sizes, prev, pager, next, jumper" background prev-text="上一页" next-text="下一页" @size-change="clickChangePerPage" @current-change="clickChangeCurrentPage" />
-      </el-footer>
+      <el-aside width="8%">
+        <el-tree :data="categoryList"></el-tree>
+      </el-aside>
+      <el-container>
+        <el-header height="30">
+          <el-button type="default" size="mini" @click="refreshList">刷新</el-button>
+          <el-button type="danger" size="mini" @click="batchDelete">批量删除</el-button>
+          <router-link :to="{path: '/blog/article/create'}"><el-button type="primary" size="mini">创建</el-button></router-link>
+        </el-header>
+        <el-main>
+          <el-table v-loading="loadingIcon" :data="articleList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange" @sort-change='sortByCustom'>
+            <el-table-column type="selection" width="50" />
+            <el-table-column prop="id" label="ID" width="50" sortable />
+            <el-table-column prop="category_name" label="Category" width="80" show-overflow-tooltip />
+            <el-table-column prop="user_name" label="User" width="80" show-overflow-tooltip />
+            <el-table-column prop="title" label="Title" width="200" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <a :href="'https://www.lnmpa.top/' + scope.row.slug" target="_blank">{{ scope.row.title }}</a>
+              </template>
+            </el-table-column>
+            <el-table-column label="Description" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <p>{{ scope.row.description }}</p>
+              </template>
+            </el-table-column>
+            <el-table-column label="草稿" width="51">
+              <template slot-scope="scope">
+                <el-button v-if="scope.row.is_draft == true" type="danger" size="mini" @click="draftArticle(scope.row, 0)">Y</el-button>
+                <el-button v-if="scope.row.is_draft == false" type="success" size="mini" @click="draftArticle(scope.row, 1)">N</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="updated_at" label="Update At" width="142" sortable>
+              <template slot-scope="scope">
+                <small><i class="el-icon-time"></i>{{scope.row.updated_at}}</small>
+                <small><i class="el-icon-timer"></i>{{scope.row.created_at}}</small>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" width="186">
+              <template slot-scope="scope">
+                <el-button type="primary" size="mini" @click="showArticleContent(scope.row)">预览</el-button>
+                <el-button type="warning" size="mini">
+                  <router-link :to="{path: '/blog/article/edit/'+scope.row.id}">编辑</router-link>
+                </el-button>
+                <el-button type="danger" size="mini" @click="deleteArticle(scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-main>
+        <el-footer height="0">
+          <el-pagination :total="listTotal" :current-page.sync="listCurrent" :page-sizes="listPageSelect" :page-size.sync="listPerPage" layout="total, sizes, prev, pager, next, jumper" background prev-text="上一页" next-text="下一页" @size-change="clickChangePerPage" @current-change="clickChangeCurrentPage" />
+        </el-footer>
+      </el-container>
     </el-container>
     <!--预览 content-->
     <el-dialog title="预览" :visible.sync="articleContentVisible">
@@ -53,7 +63,7 @@
 </template>
 
 <script>
-import { articleList, articleDelete, batchDeleteArticle, articleDetail, draftArticle } from '@/api'
+import { articleList, articleDelete, batchDeleteArticle, articleDetail, draftArticle, categoryList } from '@/api'
 export default {
   name: 'ArticleIndex',
   data() {
@@ -69,11 +79,13 @@ export default {
       articleContentVisible: false,
       articleContentValue: '',
       sortWay: 'DESC',
-      sortField: 'id'
+      sortField: 'id',
+      categoryList: []
     }
   },
   created() {
     this.loadingIcon = true
+    this.getCategoryList()
     this.articlePageList()
   },
   methods: {
@@ -83,7 +95,6 @@ export default {
     },
     sortByCustom(column) {
       // 后端排序
-      console.log(column)
       this.sortField = column.prop
       if (column.order === 'ascending') {
         this.sortWay = 'ASC'
@@ -93,10 +104,30 @@ export default {
         return false
       }
       // TODO 待完成
-      this.articlePageList()
+      const sortCOndition = {
+        sortField: this.sortField,
+        sortWay: this.sortWay
+      }
+      this.articlePageList(sortCOndition)
+    },
+    getCategoryList() {
+      categoryList().then(response => {
+        const categories = []
+        for (const i in response.data) {
+          categories.push({ label: response.data[i].name, id: response.data[i].id })
+        }
+        this.categoryList = categories
+      }).catch(error => {
+        console.error(error)
+      })
     },
     articlePageList(extras = {}) {
       const params = { per_page: this.listPerPage, page: this.listCurrent, category_id: null }
+      if (extras.sortField && extras.sortWay) {
+        params.sort_field = extras.sortField
+        params.sort_way = extras.sortWay
+      }
+
       articleList(params).then(response => {
         if (response.status === true) {
           this.articleList = response.data
