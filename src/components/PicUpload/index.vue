@@ -62,7 +62,8 @@ export default {
       const tempData = {
         path: res.key,
         original_name: file.name,
-        url: this.cdnHost + res.key + '-water',
+        // url: this.cdnHost + res.key + '-water', //到底要不要水印？
+        url: this.cdnHost + res.key,
         size: parseFileSize(file.size),
         mime: this.picMime,
         hash: res.hash
