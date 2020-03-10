@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       cdnHost: 'https://net.lnmpa.top/',
-      uploadUrl: 'https://upload-na0.qiniup.com', // web 直传地址
+      // uploadUrl: 'https://upload-na0.qiniup.com', // web 直传地址,不同区域地址也不同
+      uploadUrl: 'https://upload.qiniup.com', // web 直传地址,不同区域地址也不同
       picDialogVisible: false,
       accept: [],
       extra: {
@@ -62,8 +63,8 @@ export default {
       const tempData = {
         path: res.key,
         original_name: file.name,
-        // url: this.cdnHost + res.key + '-water', //到底要不要水印？
-        url: this.cdnHost + res.key,
+        url: this.cdnHost + res.key + '-14k', //到底要不要水印？
+        // url: this.cdnHost + res.key,
         size: parseFileSize(file.size),
         mime: this.picMime,
         hash: res.hash
