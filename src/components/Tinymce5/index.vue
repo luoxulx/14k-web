@@ -9,7 +9,7 @@ import plugins from './plugins'
 import toolbar from './toolbar'
 import codesample from './codesample'
 import load from './dynamicLoadScript'
-import { uploadToken, saveFileInfo } from '@/api'
+import { uploadImageToken, saveFileInfo } from '@/api'
 import { parseFileSize } from '@/utils'
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.4/tinymce.min.js'
 export default {
@@ -204,7 +204,8 @@ export default {
         images_upload_handler(blobInfo, success, failure, progress) {
           progress(0)
 
-          uploadToken({ key: 'editor', original_name: blobInfo.blob().name }).then(response => {
+          uploadImageToken({ key: 'editor', original_name: blobInfo.blob().name }).then(response => {
+            // key用作父级目录名
             progress(50)
             const uri = response.data.uri
             const uploadFormData = new FormData()

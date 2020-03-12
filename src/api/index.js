@@ -34,15 +34,22 @@ export function userInfo(param) {
   })
 }
 
-/** ----- qiniu storage file||pic start ----- */
-export function uploadToken(param) {
+/** ----- qiniu storage image&file start ----- */
+export function uploadImageToken(param) {
+  return request({
+    url: '/image/upload/token',
+    method: 'get',
+    params: param
+  })
+}
+export function uploadFileToken(param) {
   return request({
     url: '/file/upload/token',
     method: 'get',
     params: param
   })
 }
-
+// 此接口用于写入文件(含图片)信息
 export function saveFileInfo(data) {
   return request({
     url: '/file/info/write',

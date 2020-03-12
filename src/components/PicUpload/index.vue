@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { deleteQiniuFile, uploadToken, saveFileInfo } from '@/api'
+import { deleteQiniuFile, uploadImageToken, saveFileInfo } from '@/api'
 import { parseFileSize } from '@/utils'
 export default {
   name: 'PicUpload',
@@ -63,7 +63,7 @@ export default {
       const tempData = {
         path: res.key,
         original_name: file.name,
-        url: this.cdnHost + res.key + '-14k', //到底要不要水印？
+        url: this.cdnHost + res.key + '-14k', // 到底要不要水印？
         // url: this.cdnHost + res.key,
         size: parseFileSize(file.size),
         mime: this.picMime,
@@ -85,7 +85,7 @@ export default {
       this.extra.original_name = file.name
       this.picMime = file.raw.type || ''
 
-      uploadToken(this.extra).then(res => {
+      uploadImageToken(this.extra).then(res => {
         this.extra.token = res.data.token
         this.extra.key = res.data.key
       })
