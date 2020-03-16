@@ -3,6 +3,7 @@
     <el-container>
       <el-header height="30">
         <el-button type="default" size="mini" @click="refreshList">刷新</el-button>
+        <router-link :to="{path: '/administration/file/create'}"><el-button type="primary" size="mini">创建</el-button></router-link>
       </el-header>
       <el-main>
         <el-table v-loading="loadingIcon" :data="fileList" :element-loading-text="loadingText" tooltip-effect="dark" element-loading-spinner="el-icon-loading" border style="width: 100%" size="small" @selection-change="handleSelectionChange">
@@ -13,8 +14,11 @@
           <el-table-column prop="mime" label="Mime" width="90" />
           <el-table-column prop="size" label="Size" width="80" />
           <el-table-column prop="url" label="Url" show-overflow-tooltip />
-          <el-table-column fixed="right" label="操作" width="70">
+          <el-table-column fixed="right" label="操作" width="140">
             <template slot-scope="scope">
+              <el-button type="warning" size="mini">
+                <router-link :to="{path: '/administration/file/edit/'+scope.row.id}">编辑</router-link>
+              </el-button>
               <el-button type="danger" size="mini" @click="deleteOneFile(scope.row)">删除</el-button>
             </template>
           </el-table-column>

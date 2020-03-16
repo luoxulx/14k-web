@@ -223,8 +223,8 @@ export default {
                 progress(100)
                 const tempData = {
                   path: result.key,
-                  url: _this.cdnHost + result.key + '-14k', //到底要不要水印？
-                  url: _this.cdnHost + result.key,
+                  url: _this.cdnHost + result.key + '-14k', // 到底要不要水印？
+                  // url: _this.cdnHost + result.key,
                   size: parseFileSize(blobInfo.blob().size),
                   mime: blobInfo.blob().type,
                   original_name: blobInfo.blob().name,

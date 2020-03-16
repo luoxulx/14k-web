@@ -80,6 +80,28 @@ export function deletePicture(params) {
     params
   })
 }
+
+export function fileDetail(id) {
+  return request({
+    url: 'file/' + id,
+    method: 'get'
+  })
+}
+
+export function fileCreate(data) {
+  return request({
+    url: 'file',
+    method: 'post',
+    data
+  })
+}
+export function fileUpdate(data) {
+  return request({
+    url: 'file/' + data.id,
+    method: 'put',
+    data
+  })
+}
 /** ----- qiniu storage file||pic end ----- */
 
 /** ----- feedback-start ----- */

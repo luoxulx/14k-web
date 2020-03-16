@@ -77,7 +77,19 @@ export const constantRoutes = [
         path: 'file',
         name: 'File',
         component: () => import('@/views/administration/file/index'),
-        meta: { title: 'File', icon: 'picture' }
+        meta: { title: '文件列表', icon: 'picture' }
+      },
+      {
+        path: 'file/create',
+        name: 'Create File',
+        component: () => import('@/views/administration/file/create'),
+        hidden: true
+      },
+      {
+        path: 'file/edit/:id',
+        name: 'Edit File',
+        component: () => import('@/views/administration/file/edit'),
+        hidden: true
       },
       {
         path: 'feedback',
