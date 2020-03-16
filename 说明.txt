@@ -1,4 +1,4 @@
 npm install
 npm run dev
 npm run build:prod
-cdn跨区域同步
+上海-北美空间cdn跨区域同步
