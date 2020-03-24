@@ -23,6 +23,9 @@
           <a target="_blank" href="https://www.iconfont.cn/collections/index?spm=a313x.7781069.1998910419.4&type=1">
             <el-dropdown-item>Icon</el-dropdown-item>
           </a>
+          <a target="_blank" href="https://linux.cn/">
+            <el-dropdown-item>内容来源</el-dropdown-item>
+          </a>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">Log Out</span>
           </el-dropdown-item>

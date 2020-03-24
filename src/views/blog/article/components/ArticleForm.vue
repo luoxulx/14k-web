@@ -30,7 +30,7 @@
                     <el-date-picker v-model="articleForm.published_at" type="datetime" placeholder="发布时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" />
                   </el-form-item>
                   <el-form-item label="Thumbnail">
-                    <pic-upload v-model="articleForm.thumbnail" />
+                    <pic-upload v-model="articleForm.thumbnail" :action="imageUploadUri" :cdnhost="imageCdnHost" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="14">
@@ -115,6 +115,8 @@ export default {
       activeTagName: 'first',
       submitLoading: false,
       submitLoadingText: '数据提交中...',
+      imageUploadUri: 'https://upload.qiniup.com',
+      imageCdnHost: 'https://cn.lnmpa.top/',
       articleForm: {},
       tagList: [],
       categoryList: [],

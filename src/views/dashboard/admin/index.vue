@@ -44,7 +44,7 @@ export default {
     }
   },
   created() {
-    console.log(1)
+    // console.log(1)
   },
   methods: {
     handleSetLineChartData(type) {

@@ -1,6 +1,19 @@
 <template>
   <div class="upload-container">
-    <el-upload ref="qiniuUpload" class="image-uploader" :action="uploadUrl" :limit="1" :auto-upload="false" :data="extra" list-type="picture-card" :on-success="picUploadSuccess" :on-change="picOnchange" :before-upload="picBeforeUpload" :on-preview="picUploadPreview" :on-remove="picClickRemove">
+    <el-upload
+      ref="qiniuUpload"
+      class="image-uploader"
+      :cdnhost="cdnHost"
+      :action="uploadUri"
+      :limit="1"
+      :auto-upload="true"
+      :data="extra"
+      list-type="picture-card"
+      :on-success="picUploadSuccess"
+      :on-change="picOnchange"
+      :before-upload="picBeforeUpload"
+      :on-preview="picUploadPreview"
+      :on-remove="picClickRemove">
       <i class="el-icon-plus" />
     </el-upload>
     <el-input v-model="imageUrl" type="text" value="" style="max-width: 80%;" />&nbsp;<el-button size="mini" type="primary" @click="submitUpload">上传</el-button>
@@ -19,13 +32,20 @@ export default {
     value: {
       type: String,
       default: ''
+    },
+    cdnHost: {
+      type: String,
+      default: 'https://cn.lnmpa.top/'
+    },
+    uploadUri: {
+      // uploadUri: 'https://upload-na0.qiniup.com', // web 直传地址,不同区域地址也不同
+      // uploadUri: 'https://upload.qiniup.com', // web 直传地址,不同区域地址也不同
+      type: String,
+      default: 'https://upload.qiniup.com'
     }
   },
   data() {
     return {
-      cdnHost: 'https://net.lnmpa.top/',
-      // uploadUrl: 'https://upload-na0.qiniup.com', // web 直传地址,不同区域地址也不同
-      uploadUrl: 'https://upload.qiniup.com', // web 直传地址,不同区域地址也不同
       picDialogVisible: false,
       accept: [],
       extra: {
@@ -76,6 +96,8 @@ export default {
       saveFileInfo(tempData).then(res2 => {
         console.info('Upload Info Save Successful. ', res2)
       })
+      // 文件信息保存成功，清空extra的key
+      this.extra.key = 'thumbnail'
     },
     picUploadPreview(file) {
       console.log(file)
@@ -85,14 +107,23 @@ export default {
       this.extra.original_name = file.name
       this.picMime = file.raw.type || ''
 
-      uploadImageToken(this.extra).then(res => {
-        this.extra.token = res.data.token
-        this.extra.key = res.data.key
-      })
+      // uploadImageToken(this.extra).then(res => {
+      //   this.extra.token = res.data.token
+      //   this.extra.key = res.data.key
+      // })
     },
     picBeforeUpload(file) {
       this.picMime = file.type || ''
+      // 自动上传前需要拿到被保存的图片信息
       // console.log(file)
+      const tempData = {
+        original_name: '',
+        key: ''
+      }
+      uploadImageToken(tempData).then(res => {
+        this.extra.token = res.data.token
+        this.extra.key = res.data.key
+      })
     }
   }
 }
